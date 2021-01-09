@@ -1,19 +1,25 @@
-use std::path::Path;
+use args::ImageArgs;
+use image::open;
+use ndarray::{ArrayView, Axis, ShapeBuilder};
+
+mod args;
 
 fn main() {
-    let args: Vec<String> = std::env::args().collect();
+    // TODO: ndarray working
 
-    let image_path = Path::new(&args[1]);
+    let ImageArgs {
+        width,
+        height,
+        path,
+    } = ImageArgs::parse_args();
 
-    let mut image =
-        image::open(image_path.to_str().unwrap())
-        .expect("cannot find image");
+    let image = open(path).expect("cannot open image");
 
-    image.save(
-        format!(
-                "{}/1_{}",
-                image_path.parent().unwrap().to_str().unwrap(),
-                image_path.file_name().unwrap().to_str().unwrap()
-            )
-        ).expect("cannot save picture");
+    let color_bytes = ArrayView::from_shape(
+        ShapeBuilder::strides((width, height), (1, 1)),
+        image.as_bytes(),
+    )
+    .unwrap();
+
+    println!("{}", color_bytes.len_of(Axis(0)))
 }
