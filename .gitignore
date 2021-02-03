@@ -2,5 +2,5 @@
 __*__/
 */bin/
 
-*/target/
-*/Cargo.lock
+target/
+Cargo.lock
