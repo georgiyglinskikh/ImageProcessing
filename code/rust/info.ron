@@ -1,0 +1,4 @@
+Images(
+    size: (380, 265),
+    folder_path: "/home/geo/src/ImageProcessing/images"
+)
