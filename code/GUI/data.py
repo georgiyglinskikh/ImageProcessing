@@ -1,24 +1,21 @@
-from PIL import Image
+import PIL.Image
 import numpy as np
-
 
 class Data:
     data: np.ndarray
-    args: any
 
-    def __init__(self, data: np.ndarray, args: any):
+    def __init__(self, data: np.ndarray):
         self.data = data
-        self.args = args
 
     def apply_to(self, func):
         """Применить функцию ко всем элементам массива"""
         vect_func = np.vectorize(func)
 
-        return Data(vect_func(self.data), self.args)
+        return Data(vect_func(self.data))
 
     def apply_to_array(self, func, dimension=-1) -> np.ndarray:
         """Применить функцию с массиву с ```dimension``` измерений"""
-        return Data(np.apply_along_axis(func, dimension, self.data), self.args)
+        return Data(np.apply_along_axis(func, dimension, self.data))
 
     def get_subdata(self, x: int, y: int, R: int):
         """Взятие квадрата с данными по координатам ```x, y``` со стороной ```R```"""
@@ -28,7 +25,7 @@ class Data:
 
         # Срез по +-радиус квадрата <=> квадрат со стороной R
         subdata = Data(self.data[(
-            x - half_R):(x + half_R + 1), (y - half_R):(y + half_R + 1)], self.args)
+            x - half_R):(x + half_R + 1), (y - half_R):(y + half_R + 1)])
 
         return subdata
 
@@ -44,7 +41,7 @@ class Data:
 
         # Заполняем края нулями
         data_0 = Data(np.pad(self.data, pad_width=half_R,
-                             mode="constant", constant_values=0), self.args)
+                             mode="constant", constant_values=0))
 
         # Применяем функцию -> Преобразуем в список -> Преобразуем в np.ndarray
         filtered_array: np.ndarray = np.array(list(map(  # Преобразования типов
@@ -63,19 +60,15 @@ class Data:
         # Преобразуем изображение в известный нам размер
         filtered_data = np.reshape(filtered_array, size)
 
-        filtered_data_obj = Data(filtered_data, self.args)
+        filtered_data_obj = Data(filtered_data)
 
         return filtered_data_obj
 
     def norm(self):
-        Data((self.data / np.max(self.data)).astype(np.uint0), self.args)
+        return Data((self.data / np.max(self.data)).astype(np.uint0))
 
-    def open_image(self):
-        image = Image.open(self.args.i)
+    def from_image(image: PIL.Image.Image):
+        return Data(np.array(image))
 
-        self.data = np.array(image)
-
-    def save_image(self):
-        image = Image.fromarray(self.data.data, mode='RGB')
-
-        image.save(self.args.o)
+    def to_image(self) -> PIL.Image.Image:
+        return PIL.Image.fromarray(self.data, mode='RGB')
