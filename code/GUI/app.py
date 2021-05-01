@@ -1,12 +1,16 @@
-from data import Data
-import PIL.Image, tkinter, tkinter.filedialog
+import tkinter
+import tkinter.filedialog
+
+import PIL.Image
 
 import colors
+from data import Data
+
 
 class App(tkinter.Frame):
-    __image: PIL.Image.Image
-    __data_image: Data
-    __canvas: tkinter.Canvas
+    image: PIL.Image.Image
+    data_image: Data
+    canvas: tkinter.Canvas
 
     def __init__(self, master=None):
         super().__init__(master)
@@ -15,14 +19,14 @@ class App(tkinter.Frame):
         self.create_widgets()
 
     def create_widgets(self):
-        self.__canvas = tkinter.Canvas()
-        self.__canvas.pack()
+        self.canvas = tkinter.Canvas()
+        self.canvas.pack()
 
         menubar = tkinter.Menu(self)
 
         file_menu = tkinter.Menu(menubar)
-        file_menu.add_command(label='Открыть', command=self.open_file)
-        file_menu.add_command(label='Сохранить', command=self.save_file)
+        file_menu.add_command(label='Открыть', command=self.open_file())
+        file_menu.add_command(label='Сохранить', command=save_file(self))
 
         color_menu = tkinter.Menu(menubar)
         color_menu.add_command(label='Преобразовать в черно/белое', command=self.perform(colors.make_white_black))
@@ -38,14 +42,16 @@ class App(tkinter.Frame):
             initialdir='.',
             filetypes=[('bmp', '*.bmp'), ('jpg', '*.jpg'), ('png', '*.png')])
 
-        self.__image = PIL.Image.open(file)
-        self.__data_image = Data.from_image(self.__image)
+        self.image = PIL.Image.open(file)
+        self.data_image = Data.from_image(self.image)
 
-    def save_file(self):
-        path = tkinter.filedialog.asksaveasfilename()
 
-        self.__image.save(path)
+def save_file(app: App):
+    path = tkinter.filedialog.asksaveasfilename()
 
-    def perform(self, func):
-        self.__data_image = func(self.__data_image)
-        self.__image = PIL.Image.fromarray(self.__data_image, mode='RGB')
+    app.image.save(path)
+
+
+def perform(app: App, func):
+    app.__data_image = func(app.data_image)
+    app.__image = app.data_image.to_image()

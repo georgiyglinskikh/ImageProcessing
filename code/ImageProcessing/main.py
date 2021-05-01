@@ -1,7 +1,9 @@
-from utils import Data
+import numpy as np
+
 from args_parser import parse_args
 from process import process
-import numpy as np
+from utils import Data
+
 
 def main():
     args = parse_args()

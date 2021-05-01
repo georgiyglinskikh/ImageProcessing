@@ -1,5 +1,7 @@
 import tkinter
+
 from app import App
+
 
 def main():
     root = tkinter.Tk()
@@ -7,6 +9,7 @@ def main():
 
     app = App(master=root)
     app.mainloop()
+
 
 if __name__ == "__main__":
     main()

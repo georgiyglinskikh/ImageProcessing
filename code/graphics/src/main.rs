@@ -1,13 +1,20 @@
+#![feature(array_zip)]
+#![feature(array_map)]
+
+mod images;
+
+use image::Rgba;
+use crate::images::utils::white_black::WhiteBlackTypes;
+use crate::images::white_black::WhiteBlack;
+use std::borrow::Borrow;
+
 fn main() {
-    let image =
-        image::open("/home/geo/ImageProcessing/images/floor.bmp").expect("Cannot open image");
+    let mut image =
+        image::open("/home/geo/PycharmProjects/ImageProcessing/images/floor.bmp").expect("Cannot open image");
 
-    let buf = image.as_rgba8().expect("Cannot open image in this format");
+    let mut buf = image.as_mut_rgba8().expect("Cannot open image in this format");
 
-    for i in buf.enumerate_pixels() {
-        println!("{:?}", i);
-    }
+    WhiteBlack::white_black(buf, WhiteBlackTypes::Smooth1);
 
-    // White and black
-
+    image.save("./a.bmp").expect("Cannot save an image")
 }
