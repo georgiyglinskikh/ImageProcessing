@@ -1,15 +1,16 @@
 mod images;
+mod app;
 
-use crate::images::utils::white_black::WhiteBlackTypes;
-use crate::images::white_black::WhiteBlack;
+use crate::app::App;
 
 fn main() {
-    let image =
-        image::open("/home/geo/PycharmProjects/ImageProcessing/images/falls.bmp").expect("Cannot open image");
+    let mut app = App::new();
 
-    let mut buf = image.to_rgba8();
+    app.parse_args();
 
-    buf.white_black(WhiteBlackTypes::Smooth1);
+    app.open_image();
 
-    buf.save("./a.png").expect("Cannot save image to this file");
+    app.process_image();
+
+    app.save_image();
 }
