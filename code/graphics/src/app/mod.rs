@@ -37,6 +37,8 @@ impl App<'_> {
             let mode = WhiteBlackTypes::from_string(mode_str).unwrap();
 
             self.buf.white_black(mode);
+        } else if self.parser.is_value("filter") {
+
         }
     }
 

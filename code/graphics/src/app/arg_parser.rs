@@ -31,6 +31,11 @@ impl Parser<'_> {
                     .short("wb")
                     .value_name("WB_TYPE")
                     .help("Make picture white and black with WB_TYPE (Smooth1/Smooth2/Flat) filter")
+                    .takes_value(true))
+                .arg(Arg::with_name("filter")
+                    .short("f")
+                    .value_name("R")
+                    .help("Filter image from noise with raduis R")
                     .takes_value(true));
 
         self.matches = parser.get_matches()
