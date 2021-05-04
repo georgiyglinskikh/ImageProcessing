@@ -2,6 +2,7 @@ use crate::app::arg_parser::Parser;
 use crate::images::utils::ImageType;
 use crate::images::white_black::WhiteBlack;
 use crate::images::white_black::WhiteBlackTypes;
+use crate::images::noise_filter::NoiseFilter;
 
 mod arg_parser;
 
@@ -38,7 +39,9 @@ impl App<'_> {
 
             self.buf.white_black(mode);
         } else if self.parser.is_value("filter") {
+            let r: u32 = self.parser.get_value("filter").parse().expect("Cannot interpret R as number");
 
+            self.buf.noise_filter(r);
         }
     }
 
