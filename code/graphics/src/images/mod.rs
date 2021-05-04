@@ -4,3 +4,4 @@ pub mod change_color;
 pub mod filter;
 pub mod part;
 pub mod noise_filter;
+pub mod types;
