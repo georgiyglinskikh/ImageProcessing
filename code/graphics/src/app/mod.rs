@@ -37,11 +37,17 @@ impl App<'_> {
 
             let mode = WhiteBlackTypes::from_string(mode_str).unwrap();
 
-            self.buf.white_black(mode);
+            let wb = self.buf.white_black(mode);
+
+            self.buf = wb.to_image(&self.buf);
         } else if self.parser.is_value("filter") {
             let r: u32 = self.parser.get_value("filter").parse().expect("Cannot interpret R as number");
 
-            self.buf.noise_filter(r);
+            let wb = self.buf.white_black(WhiteBlackTypes::Smooth1);
+
+            wb.noise_filter(r);
+
+            wb.to_image(&mut self.buf);
         }
     }
 

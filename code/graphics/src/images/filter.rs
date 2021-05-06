@@ -1,22 +1,23 @@
-use crate::images::utils::{PixelType, ImageType};
+use crate::images::utils::{PixelType, ImageType, WhiteBlackType};
 use crate::images::part::Part;
 use crate::images::types::{Space, Position, Dimension};
+use crate::images::white_black::WhiteBlackImage;
 
 pub trait Filter: Part {
-    fn filter(&mut self, r: u32, func: fn(ImageType) -> PixelType);
+    fn filter(&mut self, r: u32, func: fn(WhiteBlackImage) -> WhiteBlackType);
 }
 
-impl Filter for ImageType {
-    fn filter(&mut self, r: u32, func: fn(ImageType) -> PixelType) {
+impl Filter for WhiteBlackImage {
+    fn filter(&mut self, r: u32, func: fn(WhiteBlackImage) -> WhiteBlackType) {
+        let r = r as isize;
         let half_r = r / 2;
 
-        let shift = |x: u32| x as isize - half_r as isize;
+        let shift = |x: isize| x - half_r;
 
-        for x in 0..self.width() {
-            for y in 0..self.height() {
-                self.put_pixel(
-                    x,
-                    y,
+        for x in 0..self.size.width {
+            for y in 0..self.size.height {
+                self.set(
+                    Position { x, y },
                     func(self.get_part(
                         Space {
                             position: Position {
@@ -24,10 +25,10 @@ impl Filter for ImageType {
                                 y: shift(y),
                             },
                             size: Dimension {
-                                width: r as isize,
-                                height: r as isize
-                            }
-                        }))
+                                width: r,
+                                height: r,
+                            },
+                        })),
                 );
             }
         }
