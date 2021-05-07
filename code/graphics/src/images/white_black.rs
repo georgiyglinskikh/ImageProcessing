@@ -1,18 +1,18 @@
-use crate::images::utils::{wrong, WhiteBlackType, PixelType};
+use crate::images::buffer::Buffer;
+use crate::images::utils::wrong;
 
 use super::change_color::ChangeColor;
-use super::utils::{
-    ColorFilterType,
-    ImageType,
-};
-use crate::images::part::Part;
-use crate::images::types::{Dimension, Position, Space};
-use crate::images::change_color::MaskColor;
+use super::utils::ColorFilterType;
 
 pub trait WhiteBlack: ChangeColor {
-    fn white_black(&mut self, transform_type: WhiteBlackTypes) -> WhiteBlackImage;
+    fn white_black(&mut self, transform_type: WhiteBlackTypes);
 }
 
+impl WhiteBlack for Buffer {
+    fn white_black(&mut self, transform_type: WhiteBlackTypes) {
+        self.change_color(transform_type.get_value())
+    }
+}
 
 pub type WhiteBlackFilterType = ColorFilterType;
 
@@ -20,13 +20,6 @@ pub enum WhiteBlackTypes {
     Smooth1,
     Smooth2,
     Flat,
-}
-
-
-impl WhiteBlack for ImageType {
-    fn white_black(&mut self, transform_type: WhiteBlackTypes) -> WhiteBlackImage {
-        self.change_color(transform_type.get_value())
-    }
 }
 
 const SMOOTH1: WhiteBlackFilterType = [0.2126, 0.7152, 0.0722];

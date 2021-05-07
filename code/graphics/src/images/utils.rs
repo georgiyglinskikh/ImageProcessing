@@ -7,6 +7,7 @@ pub type ColorFilterType = [CoefficientType; 3];
 pub type AlphaFilterType = CoefficientType;
 pub type ColorType = [WhiteBlackType; 4];
 pub type ChannelsType = [WhiteBlackType; 3];
+pub type BufferType = Vec<WhiteBlackType>;
 
 pub type WhiteBlackType = u8;
 
