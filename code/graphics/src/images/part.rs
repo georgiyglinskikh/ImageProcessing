@@ -1,49 +1,38 @@
-use crate::images::utils::ImageType;
-use image::GenericImage;
+use crate::images::buffer::Buffer;
+use crate::images::types::{Position, Space};
+use crate::images::utils::WhiteBlackType;
 
 pub trait Part {
-    fn get_part(&self, x: i32, y: i32, width: i32, height: i32) -> Self;
+    fn get_part(&self, space: Space) -> Self;
 }
 
-impl Part for ImageType {
-    fn get_part(&self, x: i32, y: i32, width: i32, height: i32) -> Self {
-        let mut result = self.clone();
+impl Part for Buffer {
+    fn get_part(&self, space: Space) -> Self {
+        let space = self.size.fit(space);
 
-        // TODO: hide this logic
-        let width =
-            if x + width >= result.width() as i32 {
-                result.width() as i32 - x
-            } else if x < 0 {
-                width + x
-            } else {
-                width
-            };
+        let mut result = Vec::<WhiteBlackType>::with_capacity(
+            (space.size.width * space.size.height) as usize,
+        );
 
-        let height =
-            if y + height >= result.height() as i32 {
-                result.height() as i32 - y
-            } else if y < 0 {
-                height + y
-            } else {
-                height
-            };
+        let get = self.clone_buffer();
 
-        let x =
-            if x < 0 {
-                0
-            } else {
-                x
-            };
+        for x in 0..space.size.width as isize {
+            for y in 0..space.size.height as isize {
+                result.push({
+                    let position = Position {
+                        x: space.position.x + x,
+                        y: space.position.y + y,
+                    };
 
-        let y =
-            if y < 0 {
-                0
-            } else {
-                y
-            };
+                    get(position.x as usize, position.y as usize)
+                });
+            }
+        }
 
-        let result = result.sub_image(x as u32, y as u32, width as u32, height as u32);
-
-        result.to_image()
+        Buffer {
+            size: space.size,
+            buffer: result,
+            image: Default::default(),
+        }
     }
 }

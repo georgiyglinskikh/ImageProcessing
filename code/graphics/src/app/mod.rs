@@ -1,20 +1,29 @@
 use crate::app::arg_parser::Parser;
-use crate::images::utils::ImageType;
+use crate::images::buffer::Buffer;
+use crate::images::change_color::MaskColor;
+use crate::images::noise_filter::NoiseFilter;
+use crate::images::types::Dimension;
 use crate::images::white_black::WhiteBlack;
 use crate::images::white_black::WhiteBlackTypes;
-use crate::images::noise_filter::NoiseFilter;
 
 mod arg_parser;
 
 pub struct App<'a> {
-    buf: ImageType,
+    buffer: Buffer,
     parser: Parser<'a>,
 }
 
 impl App<'_> {
     pub fn new() -> Self {
         App {
-            buf: Default::default(),
+            buffer: Buffer {
+                image: Default::default(),
+                buffer: Default::default(),
+                size: Dimension {
+                    width: 0,
+                    height: 0,
+                },
+            },
             parser: Parser::new(),
         }
     }
@@ -24,11 +33,9 @@ impl App<'_> {
     }
 
     pub fn open_image(&mut self) {
-        let image =
-            image::open(self.parser.get_value("input"))
-                .expect("Cannot open image");
+        let image = image::open(self.parser.get_value("input")).expect("Cannot open image");
 
-        self.buf = image.to_rgba8();
+        self.buffer = Buffer::new(image.to_rgba8());
     }
 
     pub fn process_image(&mut self) {
@@ -37,16 +44,28 @@ impl App<'_> {
 
             let mode = WhiteBlackTypes::from_string(mode_str).unwrap();
 
-            self.buf.white_black(mode);
-        } else if self.parser.is_value("filter") {
-            let r: u32 = self.parser.get_value("filter").parse().expect("Cannot interpret R as number");
+            self.buffer.white_black(mode);
 
-            self.buf.noise_filter(r);
+            self.buffer.update_image();
+        } else if self.parser.is_value("filter") {
+            let r: u32 = self
+                .parser
+                .get_value("filter")
+                .parse()
+                .expect("Cannot interpret R as number");
+
+            self.buffer.white_black(WhiteBlackTypes::Smooth1);
+
+            self.buffer.noise_filter(r);
+
+            self.buffer.mask_color();
         }
     }
 
     pub fn save_image(&mut self) {
-        self.buf.save(self.parser.get_value("output"))
+        self.buffer
+            .image
+            .save(self.parser.get_value("output"))
             .expect("Cannot save image to this file");
     }
 }
