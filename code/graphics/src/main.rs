@@ -1,7 +1,7 @@
-mod images;
-mod app;
-
 use crate::app::App;
+
+mod app;
+mod images;
 
 fn main() {
     let mut app = App::new();

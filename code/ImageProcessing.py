@@ -1,11 +1,11 @@
-import typing # Статическая типизация
-import IPython.display # Вывод изображений сюда
+# import typing # Статическая типизация
+# import IPython.display # Вывод изображений сюда
 
 import numpy as np # Обработка массивов
 from PIL import Image # Загрузка изображений с диска, преобразование массива в картинку
 import math # Простые математические операторы
 
-image = Image.open("./images/floor.bmp") # Считываем картинку в переменную
+image = Image.open("../images/floor.bmp") # Считываем картинку в переменную
 
 data: np.ndarray = np.array(image) # Преобразовываем картинку в двумерный массив с тройками чисел, обозначающими цвета
 
@@ -68,19 +68,19 @@ def filter_data(data: np.ndarray, R: int, func) -> np.ndarray:
 data_fitered: np.ndarray = filter_data(data_wb, 3, lambda x: np.median(x))
 """Итоговое фильтрованное изображение"""
 
-def normalize(data: np.ndarray, c: int) -> np.ndarray:
-    """Преобразование черно-белого изображения из 8битового в 1битное"""
+# def normalize(data: np.ndarray, c: int) -> np.ndarray:
+#     """Преобразование черно-белого изображения из 8битового в 1битное"""
+#
+#     # Функция сверения с порогом ```с```
+#     f = lambda x: 0 if x <= c else 1
+#
+#     # Попиесельное применение к ```data```
+#     return apply_to(data.astype(np.uint0), f)
+#
+# norm_2 = normalize(data_fitered, np.median(data_fitered))
+# """1битное изображение, полученное по медиане"""
 
-    # Функция сверения с порогом ```с```
-    f = lambda x: 0 if x <= c else 1
-
-    # Попиесельное применение к ```data```
-    return apply_to(data.astype(np.uint0), f)
-
-norm_2 = normalize(data_fitered, np.median(data_fitered))
-"""1битное изображение, полученное по медиане"""
-
-data_normed: np.ndarray = norm_2
+data_normed: np.ndarray = data_fitered  # norm_2
 """Итоговое изображение после нормализации"""
 
 sobel_matrix: np.ndarray = np.array([

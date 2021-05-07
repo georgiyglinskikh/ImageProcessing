@@ -1,16 +1,14 @@
+use crate::images::buffer::Buffer;
 use crate::images::utils::wrong;
 
 use super::change_color::ChangeColor;
-use super::utils::{
-    ColorFilterType,
-    ImageType,
-};
+use super::utils::ColorFilterType;
 
 pub trait WhiteBlack: ChangeColor {
     fn white_black(&mut self, transform_type: WhiteBlackTypes);
 }
 
-impl WhiteBlack for ImageType {
+impl WhiteBlack for Buffer {
     fn white_black(&mut self, transform_type: WhiteBlackTypes) {
         self.change_color(transform_type.get_value())
     }
@@ -42,7 +40,10 @@ impl WhiteBlackTypes {
             "Smooth1" => Some(WhiteBlackTypes::Smooth1),
             "Smooth2" => Some(WhiteBlackTypes::Smooth2),
             "Flat" => Some(WhiteBlackTypes::Flat),
-            _ => { wrong(); None }
+            _ => {
+                wrong();
+                None
+            }
         }
     }
 }
