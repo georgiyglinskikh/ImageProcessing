@@ -1,4 +1,4 @@
-use crate::app::arg_parser::Parser;
+use crate::{app::arg_parser::Parser, images::sobel::Sobel};
 use crate::images::buffer::Buffer;
 use crate::images::change_color::MaskColor;
 use crate::images::noise_filter::NoiseFilter;
@@ -39,30 +39,46 @@ impl App<'_> {
     }
 
     pub fn process_image(&mut self) {
-        if self.parser.is_value("white-black") {
+        let mode = if self.parser.is_value("white-black") {
             let mode_str = self.parser.get_value("white-black");
 
             let mode = WhiteBlackTypes::from_string(mode_str).unwrap();
 
-            self.buffer.white_black(mode);
+            mode
+        } else {
+            WhiteBlackTypes::Smooth1
+        };
 
-            self.buffer.update_image();
-        } else if self.parser.is_value("filter") {
+        self.buffer.white_black(mode);
+
+        if self.parser.is_value("noise-filter") {
             let r: u32 = self
                 .parser
-                .get_value("filter")
+                .get_value("noise-filter")
                 .parse()
                 .expect("Cannot interpret R as number");
 
-            self.buffer.white_black(WhiteBlackTypes::Smooth1);
-
             self.buffer.noise_filter(r);
+        }
 
-            self.buffer.mask_color();
+        if self.parser.is_value("sobel-filter") {
+            let r: u32 = self
+                .parser
+                .get_value("sobel-filter")
+                .parse()
+                .expect("Cannot interpret R as number");
+
+            self.buffer.sobel(r);
         }
     }
 
     pub fn save_image(&mut self) {
+        if self.parser.is_value("white-black") {
+            self.buffer.update_image();
+        } else if self.parser.is_value("noise-filter") || self.parser.is_value("sobel-filter") {
+            self.buffer.mask_color();
+        }
+
         self.buffer
             .image
             .save(self.parser.get_value("output"))

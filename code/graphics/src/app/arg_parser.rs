@@ -43,12 +43,20 @@ impl Parser<'_> {
                     .takes_value(true),
             )
             .arg(
-                Arg::with_name("filter")
-                    .short("f")
-                    .long("filter")
+                Arg::with_name("noise-filter")
+                    .short("n")
+                    .long("noise-filter")
                     .value_name("R")
                     .help("Filter image from noise with radius R")
                     .takes_value(true),
+            )
+            .arg(
+                Arg::with_name("sobel-filter")
+                    .short("s")
+                    .long("sobel-filter")
+                    .value_name("R")
+                    .help("Line out borders of objects in picture")
+                    .takes_value(true)
             );
 
         self.matches = parser.get_matches()

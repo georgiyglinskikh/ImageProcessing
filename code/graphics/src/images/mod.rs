@@ -6,3 +6,5 @@ pub mod part;
 pub mod types;
 pub mod utils;
 pub mod white_black;
+pub mod sobel;
+pub mod zero_one;

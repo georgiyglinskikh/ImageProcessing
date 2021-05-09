@@ -15,10 +15,15 @@ impl Filter for Buffer {
 
         let shift = |x: isize| x - half_r;
 
+        let mut result = Vec::with_capacity((self.size.width * self.size.height) as usize);
+
+        for _ in 0..self.size.width * self.size.height {
+            result.push(0);
+        }
+
         for x in 0..self.size.width {
             for y in 0..self.size.height {
-                self.set(
-                    Position { x, y },
+                result[(x + y * self.size.width) as usize] =
                     func(self.get_part(Space {
                         position: Position {
                             x: shift(x),
@@ -28,9 +33,10 @@ impl Filter for Buffer {
                             width: r,
                             height: r,
                         },
-                    })),
-                );
+                    }));
             }
         }
+
+        self.buffer = result;
     }
 }
