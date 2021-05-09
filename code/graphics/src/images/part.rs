@@ -10,9 +10,8 @@ impl Part for Buffer {
     fn get_part(&self, space: Space) -> Self {
         let space = self.size.fit(space);
 
-        let mut result = Vec::<WhiteBlackType>::with_capacity(
-            (space.size.width * space.size.height) as usize,
-        );
+        let mut result =
+            Vec::<WhiteBlackType>::with_capacity((space.size.width * space.size.height) as usize);
 
         let get = self.clone_buffer();
 

@@ -1,10 +1,5 @@
-use std::ops::IndexMut;
-
-use crate::images::types::{Dimension, Position};
-use crate::images::utils::{
-    BufferType, ImageType, PixelType,
-    WhiteBlackType,
-};
+use crate::images::types::Dimension;
+use crate::images::utils::{BufferType, ImageType, PixelType, WhiteBlackType};
 
 pub struct Buffer {
     pub size: Dimension,
@@ -22,12 +17,6 @@ impl Buffer {
             buffer: vec![],
             image,
         }
-    }
-
-    pub fn set(&mut self, position: Position, value: WhiteBlackType) {
-        *self
-            .buffer
-            .index_mut((position.x + position.y * self.size.width) as usize) = value;
     }
 
     pub fn update_image(&mut self) {

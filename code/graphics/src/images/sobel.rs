@@ -1,4 +1,4 @@
-use super::{buffer::Buffer, filter::Filter, types::Dimension, utils::WhiteBlackType, zero_one::ZeroOne};
+use super::{buffer::Buffer, filter::Filter, utils::WhiteBlackType, zero_one::ZeroOne};
 
 pub trait Sobel: Filter + ZeroOne {
     fn sobel(&mut self, r: u32);
@@ -12,10 +12,7 @@ const SOBEL_FILTER: [SobelFilterType; SOBEL_FILTER_SIZE] = [1, 2, 1, 0, 0, 0, -1
 
 const SOBEL_FILTER_T: [SobelFilterType; SOBEL_FILTER_SIZE] = [1, 0, -1, 2, 0, -2, 1, 0, -1];
 
-fn mul_array(
-    buffer: &Buffer,
-    sobel_filter: [SobelFilterType; SOBEL_FILTER_SIZE],
-) -> i32 {
+fn mul_array(buffer: &Buffer, sobel_filter: [SobelFilterType; SOBEL_FILTER_SIZE]) -> i32 {
     buffer
         .buffer
         .iter()
@@ -36,18 +33,15 @@ fn sobel_filter(buffer: Buffer) -> WhiteBlackType {
 
 impl Sobel for Buffer {
     fn sobel(&mut self, r: u32) {
-        let sum: u128 =self.buffer.iter()
-        .map(|&x| x as u128)
-        .sum();
+        let sum: u128 = self.buffer.iter().map(|&x| x as u128).sum();
 
         let len = self.buffer.len() as u128;
 
-        let median =
-            (sum / len) as u8;
+        let median = (sum / len) as u8;
 
         let max = *self.buffer.iter().max().unwrap();
 
-        self.into_zo(median);
+        self.transform_zo(median);
 
         self.filter(r, sobel_filter);
 

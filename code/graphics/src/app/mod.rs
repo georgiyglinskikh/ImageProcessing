@@ -1,10 +1,10 @@
-use crate::{app::arg_parser::Parser, images::sobel::Sobel};
 use crate::images::buffer::Buffer;
 use crate::images::change_color::MaskColor;
 use crate::images::noise_filter::NoiseFilter;
 use crate::images::types::Dimension;
 use crate::images::white_black::WhiteBlack;
 use crate::images::white_black::WhiteBlackTypes;
+use crate::{app::arg_parser::Parser, images::sobel::Sobel};
 
 mod arg_parser;
 
@@ -42,9 +42,7 @@ impl App<'_> {
         let mode = if self.parser.is_value("white-black") {
             let mode_str = self.parser.get_value("white-black");
 
-            let mode = WhiteBlackTypes::from_string(mode_str).unwrap();
-
-            mode
+            WhiteBlackTypes::from_string(mode_str).unwrap()
         } else {
             WhiteBlackTypes::Smooth1
         };

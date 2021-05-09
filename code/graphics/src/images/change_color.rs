@@ -1,5 +1,5 @@
 use crate::images::buffer::Buffer;
-use crate::images::utils::{ColorType, WhiteBlackType, PixelType};
+use crate::images::utils::{ColorType, PixelType, WhiteBlackType};
 
 use super::utils::ColorFilterType;
 

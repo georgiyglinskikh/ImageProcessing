@@ -56,7 +56,7 @@ impl Parser<'_> {
                     .long("sobel-filter")
                     .value_name("R")
                     .help("Line out borders of objects in picture")
-                    .takes_value(true)
+                    .takes_value(true),
             );
 
         self.matches = parser.get_matches()
