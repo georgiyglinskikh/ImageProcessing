@@ -1,5 +1,5 @@
 use crate::images::types::Dimension;
-use crate::images::utils::{BufferType, ImageType, PixelType, WhiteBlackType};
+use crate::images::utils::{BufferType, ImageType, PixelType};
 
 pub struct Buffer {
     pub size: Dimension,
@@ -20,20 +20,10 @@ impl Buffer {
     }
 
     pub fn update_image(&mut self) {
-        let get = self.clone_buffer();
-
         for (x, y, color) in self.image.enumerate_pixels_mut() {
-            let value = get(x as usize, y as usize);
+            let value = self.buffer[(x + y * self.size.width as u32) as usize];
 
             *color = PixelType::from([value, value, value, color.0[3]]);
         }
-    }
-
-    pub fn clone_buffer(&self) -> impl Fn(usize, usize) -> WhiteBlackType {
-        let buffer = self.buffer.clone();
-
-        let width = self.size.width;
-
-        move |x, y| *buffer.get(x + y * width as usize).unwrap()
     }
 }

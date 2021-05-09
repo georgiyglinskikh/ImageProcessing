@@ -13,8 +13,6 @@ impl Part for Buffer {
         let mut result =
             Vec::<WhiteBlackType>::with_capacity((space.size.width * space.size.height) as usize);
 
-        let get = self.clone_buffer();
-
         for x in 0..space.size.width as isize {
             for y in 0..space.size.height as isize {
                 result.push({
@@ -23,7 +21,7 @@ impl Part for Buffer {
                         y: space.position.y + y,
                     };
 
-                    get(position.x as usize, position.y as usize)
+                    self.buffer[(position.x + position.y * self.size.width) as usize]
                 });
             }
         }

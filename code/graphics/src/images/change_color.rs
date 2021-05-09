@@ -25,10 +25,8 @@ impl MaskColor for Buffer {
     fn mask_color(&mut self) {
         let max = *self.buffer.iter().max().unwrap();
 
-        let get = self.clone_buffer();
-
         for (x, y, color) in self.image.enumerate_pixels_mut() {
-            let value = get(x as usize, y as usize);
+            let value = self.buffer[(x + y * self.size.width as u32) as usize];
 
             let coefficient = value as f64 / max as f64;
 
